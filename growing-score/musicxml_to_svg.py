@@ -4,7 +4,6 @@ from pathlib import Path
 import click
 import lxml
 import verovio
-from click import command
 from lxml import etree
 from svgpathtools import parse_path
 
