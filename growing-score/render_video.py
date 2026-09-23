@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Callable, Literal
 
 import click
+import numpy as np
 import svgelements as se
 import partitura as pt
 import partitura.score
