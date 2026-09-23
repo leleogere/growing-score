@@ -474,15 +474,12 @@ def prepare_scene(
                     time_left = alignment.score_position_to_performance_time_fn(left)
                     time_right = alignment.score_position_to_performance_time_fn(right)
                     time_diff = float(time_right - time_left)
-                    # Add the updater, starting after the object is in the correct spot
                     proportion_before = 1.5
+                    run_time = min(max(time_diff * proportion_before, min_duration), max_duration)
+                    # Add the updater, starting after the object is in the correct spot
                     turn_animation_into_updater(
-                        FadeIn(
-                            obj,
-                            shift=DOWN * 5,
-                            run_time=min(max(time_diff * proportion_before, min_duration), max_duration),
-                        ),
-                        delay=time_left - time_diff * (proportion_before - 1) - start_time,
+                        FadeIn(obj, shift=DOWN * 5, run_time=run_time),
+                        delay=time_left - run_time - start_time,
                     )
                     # The updater will:
                     #   - make the object k starts to appear at ~tk
