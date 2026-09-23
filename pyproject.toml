@@ -1,0 +1,36 @@
+[project]
+name = "growing-score"
+version = "0.1.0"
+description = "Tools to generate animated MusicXML scores aligned on MIDI performances"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "click>=8.5.0",
+    "lxml>=6.1.3",
+    "manim",
+    "parangonar>=3.3.3",
+    "partitura>=1.9.0",
+    "scipy>=1.17.1",
+    "svgelements>=1.9.6",
+    "svgpathtools>=1.8.0",
+    "verovio>=6.3.0",
+]
+
+[project.scripts]
+gs-align = "growing_score.align_score_and_performance:main"
+gs-mxl-to-svg = "growing_score.musicxml_to_svg:main"
+gs-add-ids = "growing_score.add_id_to_musicxml:main"
+gs-render-video = "growing_score.render_video:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["growing_score*"]
+
+[tool.uv]
+package = true
+
+[tool.uv.sources]
+manim = { git = "https://github.com/leleogere/manim", branch = "support_for_svg_hierarchy" }
