@@ -6,6 +6,7 @@ import lxml
 import verovio
 from click import command
 from lxml import etree
+from svgpathtools import parse_path
 
 
 def musicxml_to_svg(
@@ -107,6 +108,50 @@ def expand_svg_use_tags(tree: lxml.etree.ElementTree) -> lxml.etree.ElementTree:
     return tree
 
 
+def shrink_hairpins(
+    tree: lxml.etree.ElementTree, shrink_amount: int = 100
+) -> lxml.etree.ElementTree:
+    ns = {"svg": "http://www.w3.org/2000/svg"}
+    root = tree.getroot()
+
+    # Get groups with class "hairpin", and shrink them horizontally by 10 units (5 on each side)
+    for g in root.xpath(".//svg:g[contains(@class, 'hairpin')]", namespaces=ns):
+        path_elem = g.find("svg:path", namespaces=ns)
+        if path_elem is None:
+            continue
+
+        d = path_elem.get("d")
+        if not d:
+            continue
+
+        path = parse_path(d)
+        xmin, xmax, ymin, ymax = path.bbox()
+        width = xmax - xmin
+        print(f"Original hairpin width: {width:.2f} units")
+
+        if width <= shrink_amount:
+            print("Skipping hairpin: too narrow to shrink")
+            continue
+
+        # Calculate horizontal scale factor
+        scale_x = (width - shrink_amount) / width
+
+        # Center of the path
+        cx = (xmin + xmax) / 2
+
+        # Apply transform: translate(cx) scale(scale_x,1) translate(-cx)
+        transform = f"translate({cx},0) scale({scale_x},1) translate({-cx},0)"
+        print(f"Applying transform: {transform}")
+
+        existing_transform = g.get("transform")
+        if existing_transform:
+            g.set("transform", existing_transform + " " + transform)
+        else:
+            g.set("transform", transform)
+
+    return tree
+
+
 def musicxml_to_clean_svg_old(musicxml_file: Path, output_file: Path) -> None:
     svg = musicxml_to_svg(musicxml_file)
     # svg.write("/tmp/debug.svg", pretty_print=True, xml_declaration=True, encoding="UTF-8")
@@ -130,6 +175,11 @@ def musicxml_to_clean_svg(musicxml_file: Path, output_file: Path) -> None:
     ]
     print(f"Running command: {' '.join(command)}")
     subprocess.run(command)
+    # Reload the SVG and shrink hairpins
+    tree = etree.parse(output_file)
+    tree = shrink_hairpins(tree)
+    with open(output_file, "wb") as f:
+        tree.write(f, pretty_print=True, xml_declaration=True, encoding="UTF-8")
 
 
 @click.command("MusicXML to SVG")
