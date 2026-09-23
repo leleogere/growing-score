@@ -35,6 +35,7 @@ def align_score_and_performance(score_path: Path, performance_path: Path, output
 @click.argument("performance_path", type=Path)
 @click.option("--output_path", "-o", type=Path, default=None, help="Output match file")
 def main(score_path: Path, performance_path: Path, output_path: Path = None) -> None:
+    """Align a MusicXML score with a MIDI performance."""
     align_score_and_performance(score_path, performance_path, output_path)
 
 

@@ -23,6 +23,7 @@ def add_id_to_notes(tree: etree.ElementTree) -> etree.ElementTree:
 @click.argument("musicxml_file", type=Path)
 @click.option("--output_file", "-o", type=Path, default=None, help="Output MusicXML file")
 def main(musicxml_file: Path, output_file: Path = None) -> None:
+    """Add incremental IDs to the notes of a MusicXML file."""
     if output_file is None:
         output_file = musicxml_file.with_stem(f"{musicxml_file.stem}_with_ids")
 

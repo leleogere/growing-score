@@ -624,6 +624,7 @@ def main(
     transparent: bool = False,
     end: float | None = None,
 ) -> None:
+    """Render an animated video of the aligned score."""
     render_video(
         score_path=score_path,
         svg_path=svg_path,

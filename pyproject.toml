@@ -17,10 +17,7 @@ dependencies = [
 ]
 
 [project.scripts]
-gs-align = "growing_score.align_score_and_performance:main"
-gs-mxl-to-svg = "growing_score.musicxml_to_svg:main"
-gs-add-ids = "growing_score.add_id_to_musicxml:main"
-gs-render-video = "growing_score.render_video:main"
+growing-score = "growing_score.cli:main"
 
 [build-system]
 requires = ["setuptools>=61"]

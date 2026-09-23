@@ -185,6 +185,7 @@ def musicxml_to_clean_svg(musicxml_file: Path, output_file: Path) -> None:
 @click.argument("musicxml_file", type=Path)
 @click.option("--output_file", "-o", type=Path, default=None, help="Output SVG file")
 def main(musicxml_file: Path, output_file: Path = None) -> None:
+    """Convert a MusicXML file to a clean SVG with Verovio."""
     if output_file is None:
         output_file = musicxml_file.with_suffix(".svg")
         print(output_file.as_posix())
